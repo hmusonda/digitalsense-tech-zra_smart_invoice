@@ -1,0 +1,143 @@
+{
+  "actions": [],
+  "autoname": "ZRA-LOG-.YYYY.-.#####",
+  "creation": "2026-06-21 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "document_section",
+    "reference_doctype",
+    "reference_name",
+    "submission_type",
+    "col_break_doc",
+    "status",
+    "submitted_at",
+    "retry_count",
+    "request_section",
+    "request_payload",
+    "response_section",
+    "response_data",
+    "col_break_resp",
+    "zra_receipt_number",
+    "error_message"
+  ],
+  "fields": [
+    {
+      "fieldname": "document_section",
+      "fieldtype": "Section Break",
+      "label": "Document Reference"
+    },
+    {
+      "fieldname": "reference_doctype",
+      "fieldtype": "Link",
+      "label": "Reference DocType",
+      "options": "DocType",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "reference_name",
+      "fieldtype": "Dynamic Link",
+      "label": "Reference Name",
+      "options": "reference_doctype",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "submission_type",
+      "fieldtype": "Select",
+      "label": "Submission Type",
+      "options": "Sales Invoice\nCredit Note\nPurchase Invoice\nStock Movement\nItem Registration\nCustomer Registration\nDevice Initialization",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "col_break_doc",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Pending\nSuccess\nFailed\nRetrying",
+      "in_list_view": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "submitted_at",
+      "fieldtype": "Datetime",
+      "label": "Submitted At",
+      "in_list_view": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "retry_count",
+      "fieldtype": "Int",
+      "label": "Retry Count"
+    },
+    {
+      "fieldname": "request_section",
+      "fieldtype": "Section Break",
+      "label": "Request Payload",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "request_payload",
+      "fieldtype": "Code",
+      "label": "Request Payload",
+      "options": "JSON"
+    },
+    {
+      "fieldname": "response_section",
+      "fieldtype": "Section Break",
+      "label": "Response"
+    },
+    {
+      "fieldname": "response_data",
+      "fieldtype": "Code",
+      "label": "Response Data",
+      "options": "JSON"
+    },
+    {
+      "fieldname": "col_break_resp",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "zra_receipt_number",
+      "fieldtype": "Data",
+      "label": "ZRA Receipt Number",
+      "read_only": 1
+    },
+    {
+      "fieldname": "error_message",
+      "fieldtype": "Small Text",
+      "label": "Error Message",
+      "read_only": 1
+    }
+  ],
+  "in_create": 1,
+  "links": [],
+  "modified": "2026-06-21 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "ZRA Smart Invoice",
+  "name": "ZRA Submission Log",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "read": 1,
+      "role": "Accounts User"
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "role": "System Manager",
+      "write": 1
+    }
+  ],
+  "sort_field": "submitted_at",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 0
+}

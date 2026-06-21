@@ -1,0 +1,2 @@
+include pyproject.toml
+recursive-include zra_smart_invoice *.json *.js *.css *.html *.csv *.txt *.md

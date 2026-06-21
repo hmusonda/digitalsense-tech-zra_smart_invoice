@@ -1,0 +1,22 @@
+[project]
+name = "zra_smart_invoice"
+authors = [{ name = "Digital Sense", email = "humphrey@digitalsense.tech" }]
+description = "ZRA Smart Invoice integration for ERPNext — multi-tenant, DigiTax middleware"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+version = "0.1.0"
+
+dependencies = ["frappe~=15.0.0", "requests>=2.31.0", "qrcode[pil]>=7.4.2"]
+
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = ["E501"]

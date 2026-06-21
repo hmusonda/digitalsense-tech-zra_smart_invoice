@@ -1,0 +1,171 @@
+{
+  "actions": [],
+  "creation": "2026-06-21 00:00:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "environment_section",
+    "environment",
+    "col_break_env",
+    "is_initialized",
+    "credentials_section",
+    "tpin",
+    "branch_id",
+    "col_break_creds",
+    "device_serial_no",
+    "digitax_api_key",
+    "api_section",
+    "digitax_api_url",
+    "col_break_api",
+    "digitax_timeout",
+    "behaviour_section",
+    "auto_submit_sales_invoice",
+    "auto_submit_purchase_invoice",
+    "col_break_beh",
+    "auto_sync_stock",
+    "submit_on_error"
+  ],
+  "fields": [
+    {
+      "fieldname": "environment_section",
+      "fieldtype": "Section Break",
+      "label": "Environment"
+    },
+    {
+      "default": "Sandbox",
+      "fieldname": "environment",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Environment",
+      "options": "Sandbox\nProduction",
+      "reqd": 1
+    },
+    {
+      "fieldname": "col_break_env",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "0",
+      "fieldname": "is_initialized",
+      "fieldtype": "Check",
+      "label": "Device Initialized with ZRA",
+      "read_only": 1
+    },
+    {
+      "fieldname": "credentials_section",
+      "fieldtype": "Section Break",
+      "label": "ZRA Credentials"
+    },
+    {
+      "fieldname": "tpin",
+      "fieldtype": "Data",
+      "label": "TPIN",
+      "reqd": 1,
+      "description": "Your company's ZRA Taxpayer Identification Number"
+    },
+    {
+      "fieldname": "branch_id",
+      "fieldtype": "Data",
+      "label": "Branch ID",
+      "reqd": 1,
+      "description": "ZRA Branch ID assigned during VSDC registration"
+    },
+    {
+      "fieldname": "col_break_creds",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "device_serial_no",
+      "fieldtype": "Data",
+      "label": "Device Serial Number",
+      "reqd": 1,
+      "description": "Device serial number from ZRA Smart Invoice portal"
+    },
+    {
+      "fieldname": "digitax_api_key",
+      "fieldtype": "Password",
+      "label": "DigiTax API Key",
+      "reqd": 1,
+      "description": "API key provided by DigiTax after onboarding"
+    },
+    {
+      "fieldname": "api_section",
+      "fieldtype": "Section Break",
+      "label": "API Configuration"
+    },
+    {
+      "default": "https://api.digitax.tech",
+      "fieldname": "digitax_api_url",
+      "fieldtype": "Data",
+      "label": "DigiTax API URL"
+    },
+    {
+      "fieldname": "col_break_api",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "30",
+      "fieldname": "digitax_timeout",
+      "fieldtype": "Int",
+      "label": "API Timeout (seconds)"
+    },
+    {
+      "fieldname": "behaviour_section",
+      "fieldtype": "Section Break",
+      "label": "Submission Behaviour"
+    },
+    {
+      "default": "1",
+      "fieldname": "auto_submit_sales_invoice",
+      "fieldtype": "Check",
+      "label": "Auto-submit Sales Invoices to ZRA"
+    },
+    {
+      "default": "1",
+      "fieldname": "auto_submit_purchase_invoice",
+      "fieldtype": "Check",
+      "label": "Auto-submit Purchase Invoices to ZRA"
+    },
+    {
+      "fieldname": "col_break_beh",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "1",
+      "fieldname": "auto_sync_stock",
+      "fieldtype": "Check",
+      "label": "Auto-sync Stock Movements to ZRA"
+    },
+    {
+      "default": "0",
+      "fieldname": "submit_on_error",
+      "fieldtype": "Check",
+      "label": "Allow Invoice Submission Even if ZRA Call Fails",
+      "description": "If unchecked, invoice submission will be blocked when ZRA API call fails"
+    }
+  ],
+  "issingle": 1,
+  "links": [],
+  "modified": "2026-06-21 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "ZRA Smart Invoice",
+  "name": "ZRA Settings",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}

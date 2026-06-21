@@ -1,0 +1,261 @@
+{% set company = frappe.get_doc("Company", doc.company) %}
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; font-size: 11px; color: #000; }
+
+  .invoice-wrapper { width: 100%; max-width: 210mm; margin: 0 auto; padding: 10mm; }
+
+  /* ── Header ── */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8mm; border-bottom: 2px solid #000; padding-bottom: 4mm; }
+  .company-info h1 { font-size: 18px; font-weight: bold; margin-bottom: 2px; }
+  .company-info p { font-size: 10px; line-height: 1.4; }
+  .invoice-title { text-align: right; }
+  .invoice-title h2 { font-size: 20px; font-weight: bold; color: #c00; text-transform: uppercase; }
+  .invoice-title p { font-size: 10px; }
+
+  /* ── ZRA compliance banner ── */
+  .zra-banner { background: #f0f0f0; border: 1px solid #ccc; padding: 3mm 4mm; margin-bottom: 6mm; display: flex; justify-content: space-between; align-items: center; }
+  .zra-banner .zra-label { font-size: 9px; color: #555; }
+  .zra-banner .zra-rcpt { font-size: 13px; font-weight: bold; }
+  .zra-banner .zra-tpin { font-size: 10px; }
+
+  /* ── Party info ── */
+  .party-row { display: flex; gap: 6mm; margin-bottom: 6mm; }
+  .party-box { flex: 1; border: 1px solid #ddd; padding: 3mm; }
+  .party-box h4 { font-size: 9px; text-transform: uppercase; color: #666; margin-bottom: 2mm; border-bottom: 1px solid #eee; padding-bottom: 1mm; }
+  .party-box p { font-size: 10px; line-height: 1.5; }
+
+  /* ── Invoice meta ── */
+  .meta-row { display: flex; gap: 4mm; margin-bottom: 6mm; font-size: 10px; }
+  .meta-row .meta-item { flex: 1; }
+  .meta-row .meta-item label { color: #666; display: block; font-size: 9px; }
+  .meta-row .meta-item span { font-weight: bold; }
+
+  /* ── Items table ── */
+  table.items { width: 100%; border-collapse: collapse; margin-bottom: 6mm; font-size: 10px; }
+  table.items thead tr { background: #333; color: #fff; }
+  table.items thead th { padding: 2mm 3mm; text-align: left; font-size: 9px; font-weight: normal; }
+  table.items thead th.text-right { text-align: right; }
+  table.items tbody tr:nth-child(even) { background: #f9f9f9; }
+  table.items tbody td { padding: 2mm 3mm; border-bottom: 1px solid #eee; vertical-align: top; }
+  table.items tbody td.text-right { text-align: right; }
+  table.items tfoot td { padding: 2mm 3mm; font-weight: bold; border-top: 2px solid #333; }
+  table.items tfoot td.text-right { text-align: right; }
+
+  /* ── Totals ── */
+  .totals-section { display: flex; justify-content: flex-end; margin-bottom: 6mm; }
+  .totals-table { width: 60mm; font-size: 10px; }
+  .totals-table tr td { padding: 1mm 2mm; }
+  .totals-table tr td:last-child { text-align: right; font-weight: bold; }
+  .totals-table tr.grand-total td { font-size: 13px; border-top: 2px solid #000; padding-top: 2mm; }
+
+  /* ── ZRA footer ── */
+  .zra-footer { border: 2px solid #c00; padding: 4mm; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4mm; }
+  .zra-footer .zra-text { flex: 1; }
+  .zra-footer .zra-text h3 { font-size: 11px; color: #c00; font-weight: bold; margin-bottom: 1mm; }
+  .zra-footer .zra-text p { font-size: 9px; line-height: 1.4; color: #333; }
+  .zra-footer .zra-text .rcpt-no { font-size: 14px; font-weight: bold; color: #000; margin-top: 1mm; }
+  .zra-qr { width: 25mm; height: 25mm; text-align: center; flex-shrink: 0; }
+  .zra-qr img { width: 25mm; height: 25mm; }
+
+  /* ── Notes ── */
+  .notes { font-size: 9px; color: #666; margin-bottom: 4mm; }
+  .watermark-cancelled { position: fixed; top: 40%; left: 10%; font-size: 80px; color: rgba(200,0,0,0.12); transform: rotate(-30deg); z-index: 0; font-weight: bold; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="invoice-wrapper">
+
+  {% if doc.status == "Cancelled" %}
+  <div class="watermark-cancelled">CANCELLED</div>
+  {% endif %}
+
+  <!-- Header -->
+  <div class="header">
+    <div class="company-info">
+      {% if company.company_logo %}
+      <img src="{{ company.company_logo }}" style="height:12mm; margin-bottom:2mm;" />
+      {% endif %}
+      <h1>{{ doc.company }}</h1>
+      <p>
+        {% if company.address %}<b>Address:</b> {{ company.address }}<br>{% endif %}
+        {% if company.phone_no %}<b>Tel:</b> {{ company.phone_no }}<br>{% endif %}
+        {% if company.email %}<b>Email:</b> {{ company.email }}<br>{% endif %}
+        {% if company.website %}<b>Web:</b> {{ company.website }}<br>{% endif %}
+        {% set tpin = frappe.db.get_single_value("ZRA Settings", "tpin") %}
+        {% if tpin %}<b>TPIN:</b> {{ tpin }}{% endif %}
+      </p>
+    </div>
+    <div class="invoice-title">
+      {% if doc.is_return %}
+      <h2>Credit Note</h2>
+      {% else %}
+      <h2>Tax Invoice</h2>
+      {% endif %}
+      <p><b>No:</b> {{ doc.name }}</p>
+      <p><b>Date:</b> {{ frappe.format(doc.posting_date, {"fieldtype":"Date"}) }}</p>
+      {% if doc.due_date %}
+      <p><b>Due:</b> {{ frappe.format(doc.due_date, {"fieldtype":"Date"}) }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ZRA Receipt Banner (shown only when submitted) -->
+  {% if doc.zra_receipt_number %}
+  <div class="zra-banner">
+    <div>
+      <div class="zra-label">ZRA SMART INVOICE</div>
+      <div class="zra-rcpt">Receipt No: {{ doc.zra_receipt_number }}</div>
+    </div>
+    <div class="zra-tpin">
+      Verified by Zambia Revenue Authority<br>
+      {% if tpin %}TPIN: {{ tpin }}{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Bill To / Ship To -->
+  <div class="party-row">
+    <div class="party-box">
+      <h4>Bill To</h4>
+      <p>
+        <b>{{ doc.customer_name }}</b><br>
+        {% if doc.address_display %}{{ doc.address_display | replace("\n","<br>") }}<br>{% endif %}
+        {% set cust_tpin = frappe.db.get_value("Customer", doc.customer, "zra_customer_tpin") %}
+        {% if cust_tpin %}<b>TPIN:</b> {{ cust_tpin }}{% endif %}
+      </p>
+    </div>
+    {% if doc.shipping_address_name %}
+    <div class="party-box">
+      <h4>Ship To</h4>
+      <p>{{ doc.shipping_address | replace("\n","<br>") }}</p>
+    </div>
+    {% endif %}
+    <div class="party-box" style="max-width:55mm;">
+      <h4>Invoice Details</h4>
+      <p>
+        <b>Payment Terms:</b> {{ doc.payment_terms_template or "—" }}<br>
+        {% if doc.po_no %}<b>P.O. No:</b> {{ doc.po_no }}<br>{% endif %}
+        {% if doc.project %}<b>Project:</b> {{ doc.project }}<br>{% endif %}
+        <b>Currency:</b> {{ doc.currency }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Items Table -->
+  <table class="items">
+    <thead>
+      <tr>
+        <th style="width:4%">#</th>
+        <th style="width:32%">Item Description</th>
+        <th style="width:8%" class="text-right">Qty</th>
+        <th style="width:10%">UOM</th>
+        <th style="width:14%" class="text-right">Unit Price (ZMW)</th>
+        <th style="width:8%" class="text-right">Disc %</th>
+        <th style="width:12%" class="text-right">Tax</th>
+        <th style="width:12%" class="text-right">Amount (ZMW)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.items %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>
+          <b>{{ row.item_name }}</b>
+          {% if row.description and row.description != row.item_name %}
+          <br><span style="color:#555;font-size:9px;">{{ row.description }}</span>
+          {% endif %}
+          {% set cls = frappe.db.get_value("Item", row.item_code, "zra_item_class_code") %}
+          {% if cls %}<br><span style="color:#888;font-size:8px;">ZRA Class: {{ cls }}</span>{% endif %}
+        </td>
+        <td class="text-right">{{ row.qty }}</td>
+        <td>{{ row.uom }}</td>
+        <td class="text-right">{{ frappe.format(row.rate, {"fieldtype":"Currency","currency":doc.currency}) }}</td>
+        <td class="text-right">{{ row.discount_percentage or 0 }}%</td>
+        <td class="text-right">
+          {% set tax_rate = 16 %}
+          {% set tax_amt = (row.net_amount or row.amount) * tax_rate / (100 + tax_rate) %}
+          VAT {{ tax_rate }}%<br>{{ frappe.format(tax_amt, {"fieldtype":"Currency","currency":doc.currency}) }}
+        </td>
+        <td class="text-right">{{ frappe.format(row.amount, {"fieldtype":"Currency","currency":doc.currency}) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Totals -->
+  <div class="totals-section">
+    <table class="totals-table">
+      <tr>
+        <td>Subtotal (excl. VAT)</td>
+        <td>{{ frappe.format(doc.net_total, {"fieldtype":"Currency","currency":doc.currency}) }}</td>
+      </tr>
+      {% for tax in doc.taxes %}
+      <tr>
+        <td>{{ tax.description }}</td>
+        <td>{{ frappe.format(tax.tax_amount, {"fieldtype":"Currency","currency":doc.currency}) }}</td>
+      </tr>
+      {% endfor %}
+      {% if doc.discount_amount %}
+      <tr>
+        <td>Discount</td>
+        <td>-{{ frappe.format(doc.discount_amount, {"fieldtype":"Currency","currency":doc.currency}) }}</td>
+      </tr>
+      {% endif %}
+      <tr class="grand-total">
+        <td>TOTAL DUE (ZMW)</td>
+        <td>{{ frappe.format(doc.grand_total, {"fieldtype":"Currency","currency":doc.currency}) }}</td>
+      </tr>
+      {% if doc.outstanding_amount is defined %}
+      <tr>
+        <td style="color:#c00;">Outstanding</td>
+        <td style="color:#c00;">{{ frappe.format(doc.outstanding_amount, {"fieldtype":"Currency","currency":doc.currency}) }}</td>
+      </tr>
+      {% endif %}
+    </table>
+  </div>
+
+  <!-- Amount in Words -->
+  {% if doc.in_words %}
+  <p style="font-size:9px;margin-bottom:5mm;"><b>Amount in Words:</b> {{ doc.in_words }}</p>
+  {% endif %}
+
+  <!-- Terms & Conditions -->
+  {% if doc.terms %}
+  <div style="font-size:9px;color:#444;margin-bottom:5mm;border-top:1px solid #ddd;padding-top:2mm;">
+    <b>Terms & Conditions:</b><br>{{ doc.terms }}
+  </div>
+  {% endif %}
+
+  <!-- ZRA Smart Invoice Footer — REQUIRED by ZRA on every printed invoice -->
+  <div class="zra-footer">
+    <div class="zra-text">
+      <h3>🇿🇲 ZRA SMART INVOICE — VERIFIED</h3>
+      {% if doc.zra_receipt_number %}
+      <div class="rcpt-no">Receipt No: {{ doc.zra_receipt_number }}</div>
+      <p>This invoice has been submitted to and verified by the Zambia Revenue Authority Smart Invoice System.</p>
+      {% else %}
+      <p style="color:#c00;">⚠ This invoice has not yet been submitted to ZRA Smart Invoice. Contact the supplier.</p>
+      {% endif %}
+      {% if doc.zra_submitted_at %}
+      <p style="margin-top:1mm;">Submitted: {{ frappe.format(doc.zra_submitted_at, {"fieldtype":"Datetime"}) }}</p>
+      {% endif %}
+    </div>
+    {% if doc.zra_qr_code %}
+    <div class="zra-qr">
+      <img src="{{ doc.zra_qr_code }}" alt="ZRA QR Code" />
+      <div style="font-size:7px;margin-top:1mm;">Scan to verify</div>
+    </div>
+    {% endif %}
+  </div>
+
+  <p style="text-align:center;font-size:8px;color:#999;">
+    Generated by ERPNext — Powered by Digital Sense (digitalsense.tech)
+  </p>
+
+</div>
+</body>
+</html>

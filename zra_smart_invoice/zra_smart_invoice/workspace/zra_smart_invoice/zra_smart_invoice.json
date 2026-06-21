@@ -1,0 +1,52 @@
+{
+  "charts": [],
+  "content": "[{\"id\":\"zra-setup\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"ZRA Setup Wizard\",\"format\":\"\"}},{\"id\":\"zra-settings\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"ZRA Settings\",\"format\":\"\"}},{\"id\":\"zra-log\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"ZRA Submission Log\",\"format\":\"\"}},{\"id\":\"zra-item-class\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"ZRA Item Classification\",\"format\":\"\"}}]",
+  "creation": "2026-06-21 00:00:00.000000",
+  "doctype": "Workspace",
+  "hide_custom": 0,
+  "is_hidden": 0,
+  "label": "ZRA Smart Invoice",
+  "modified": "2026-06-21 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "ZRA Smart Invoice",
+  "name": "ZRA Smart Invoice",
+  "owner": "Administrator",
+  "parent_page": "Accounting",
+  "public": 1,
+  "roles": [],
+  "sequence_id": 99,
+  "shortcuts": [
+    {
+      "color": "Green",
+      "doc_view": "",
+      "icon": "setting",
+      "label": "ZRA Setup Wizard",
+      "link_to": "zra-setup-wizard",
+      "type": "Page"
+    },
+    {
+      "color": "Blue",
+      "doc_view": "",
+      "icon": "tool",
+      "label": "ZRA Settings",
+      "link_to": "ZRA Settings",
+      "type": "DocType"
+    },
+    {
+      "color": "Orange",
+      "doc_view": "List",
+      "icon": "list",
+      "label": "ZRA Submission Log",
+      "link_to": "ZRA Submission Log",
+      "type": "DocType"
+    },
+    {
+      "color": "Purple",
+      "doc_view": "List",
+      "icon": "tag",
+      "label": "ZRA Item Classification",
+      "link_to": "ZRA Item Classification",
+      "type": "DocType"
+    }
+  ]
+}

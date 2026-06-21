@@ -1,0 +1,60 @@
+{
+  "actions": [],
+  "autoname": "field:cls_code",
+  "creation": "2026-06-21 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": ["cls_code", "cls_name", "taxtype_cd", "used_yn"],
+  "fields": [
+    {
+      "fieldname": "cls_code",
+      "fieldtype": "Data",
+      "label": "Classification Code",
+      "reqd": 1,
+      "in_list_view": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "cls_name",
+      "fieldtype": "Data",
+      "label": "Classification Name",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "taxtype_cd",
+      "fieldtype": "Select",
+      "label": "Tax Type",
+      "options": "A\nB\nC\nD",
+      "in_list_view": 1,
+      "description": "A=VAT 16%, B=Tourism Levy, C=Zero-rated, D=Exempt"
+    },
+    {
+      "default": "1",
+      "fieldname": "used_yn",
+      "fieldtype": "Check",
+      "label": "Active"
+    }
+  ],
+  "links": [],
+  "modified": "2026-06-21 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "ZRA Smart Invoice",
+  "name": "ZRA Item Classification",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "read": 1,
+      "role": "Accounts User"
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "System Manager",
+      "write": 1
+    }
+  ],
+  "sort_field": "cls_code",
+  "sort_order": "ASC"
+}
